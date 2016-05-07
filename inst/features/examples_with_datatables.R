@@ -3,6 +3,8 @@
 library(formattable)
 library(purrr)
 source("./inst/features/formattable_to_DT.R")
+# if not cloned locally, source from github
+# source("https://rawgit.com/timelyportfolio/formattable/experiments/inst/features/formattable_to_DT.R")
 
 # helper function to compare formattable htmlwidget with datatable render
 library(htmltools)
