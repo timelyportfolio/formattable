@@ -80,11 +80,20 @@ as.htmlwidget.formattable <- function(x, width = "100%", height = NULL, ...) {
     height = height, package = "formattable")
 }
 
-#' @importFrom shiny bootstrapPage
-#' @importFrom htmltools tags
+#' @importFrom shiny bootstrapLib
+#' @importFrom rmarkdown html_dependency_jquery
+#' @importFrom htmltools tags attachDependencies
 formattable_widget_html <- function(name, package, id, style, class, width, height) {
-  shiny::bootstrapPage(htmltools::tags$div(id = id, class = class, style = style,
-    width = width, height = height))
+  htmltools::attachDependencies(
+    htmltools::tags$div(
+      id = id, class = class, style = style,
+      width = width, height = height
+    ),
+    list(
+      rmarkdown::html_dependency_jquery(),
+      shiny::bootstrapLib()
+    )
+  )
 }
 
 #' Widget output function for use in Shiny
