@@ -2,17 +2,14 @@
 
 library(formattable)
 library(purrr)
-source("./inst/features/formattable_to_DT.R")
-# if not cloned locally, source from github
-# source("https://rawgit.com/timelyportfolio/formattable/experiments/inst/features/formattable_to_DT.R")
 
 # helper function to compare formattable htmlwidget with datatable render
 library(htmltools)
 compare_widgets <- function(fdf){
   browsable(
     tagList(
-      formattable:::as.htmlwidget.formattable(fdf),
-      as.datatable.formattable(fdf, style="bootstrap")
+      as.htmlwidget(fdf),
+      as.datatable(fdf, style="bootstrap")
     )
   )
 }
@@ -176,7 +173,7 @@ library("dplyr")
 library("broom")
 library("stringr")
 library("knitr")
-
+library("magrittr")
 fix_names <- . %>%
   str_replace(".Intercept.", "Intercept") %>%
   str_replace("Species", "") %>%
@@ -223,7 +220,6 @@ lm(Sepal.Length ~ Species * Sepal.Width, iris) %>%
         }
       )
     )
-    ,digits=2
   ) %>%
-  as.datatable.formattable(options=list(dom='t'), rownames=FALSE) %>%
+  as.datatable(options=list(dom='t'), rownames=FALSE) %>%
   formatRound(columns=c("Estimate","SE","_t_"),digits=3)

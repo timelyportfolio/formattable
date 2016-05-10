@@ -5,9 +5,6 @@
 library(formattable)
 library(htmltools)
 library(pipeR)
-source("./inst/features/formattable_to_DT.R")
-# if not cloned locally, source from github
-# source("https://rawgit.com/timelyportfolio/formattable/experiments/inst/features/formattable_to_DT.R")
 
 
 # grades example from http://github.com/renkun-ken/formattable#
@@ -41,7 +38,7 @@ df <- data.frame(
 
 
 #  using our new helper functions
-ft_htmldf <- as.htmldf.formattable(ft)
+ft_htmldf <- as.htmldf(ft)
 #  change the column headings
 colnames(ft_htmldf) <- c(
   "Unique Identitifier",
@@ -111,9 +108,21 @@ function(el,x){
 )
 
 onRender(
-  as.datatable.formattable(
+  as.datatable(
     formattable(ft_htmldf),
-    options=list(dom='t')
+    options=list(
+      dom='t',
+      # this does not seem to work
+      #  handle in JavaScript below
+      #  attribute align needs to be "right"
+      #  to work correctly
+      columnDefs = list(
+      #  list(targets = 4,className = 'dt-right')
+        list(targets = c(4,5),className = 'td-align-right')
+      )
+    ),
+    #style='bootstrap',
+    rownames = FALSE
   ),
   "
   function(el,x){
@@ -155,6 +164,9 @@ onRender(
   'width': '50px',
   'word-break': 'break-word'
   });
+
+  // change align attribute to right
+  $(tbl).find('td.td-align-right').attr('align','right');
   }
   "
 )
