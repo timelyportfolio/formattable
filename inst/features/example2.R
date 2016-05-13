@@ -1,3 +1,13 @@
+bootstrap_dependency <- function(){
+  htmltools::htmlDependency(
+    name = "bootstrap",
+    version = "3.3.6",
+    src = c(href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/"),
+    script = "js/bootstrap.min.js",
+    stylesheet = "css/bootstrap.min.css"
+  )
+}
+
 library("dplyr")
 library("broom")
 library("stringr")
@@ -156,7 +166,7 @@ function(settings){
   ),
   list(
     rmarkdown:::html_dependency_jquery(),
-    shiny:::bootstrapLib(),
+    bootstrap_dependency(),
     htmlwidgets:::getDependency("sparkline")[[3]]
   )
 ))
