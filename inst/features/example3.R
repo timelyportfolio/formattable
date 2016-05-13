@@ -1,7 +1,18 @@
 # work through Example 3  request in email
 
+bootstrap_dependency <- function(){
+  htmltools::htmlDependency(
+    name = "bootstrap",
+    version = "3.3.6",
+    src = c(href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/"),
+    script = "js/bootstrap.min.js",
+    stylesheet = "css/bootstrap.min.css"
+  )
+}
+
 library(formattable)
 library(htmltools)
+library(htmlwidgets)
 
 CSDperceptions <- matrix(c(0.3004, 0.6864, 0.4975, 0.2908, 0.2781, 0.2642, 0.1916, 0.284,  0.3514, 0.2534, 0.2089,
                            c(  0.0198, 0.4604, 0.2151, 0.5235, 0.1151, 0.12,   0.5457, 0.3041, 0.06312,    0.384,  0.06064),
@@ -84,6 +95,6 @@ function(settings){
   ),
   list(
     rmarkdown:::html_dependency_jquery(),
-    shiny:::bootstrapLib()
+    bootstrap_dependency()
   )
 ))
