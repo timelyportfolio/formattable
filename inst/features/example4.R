@@ -127,24 +127,54 @@ browsable(
   )
 )
 
+
+tbl <- html_table(
+  as.htmldf(ft),
+  table_class="table table-condensed table-striped",
+  include_rownames=TRUE,
+  colhead_style=paste0("vertical-align:bottom;",c("","","","font-style:italic;","font-style:italic;")),
+  align=c("left",rep("right",4)),
+  caption=tagList(
+    tags$caption(
+      style="caption-side:top;",
+      tags$h2(
+        style="color:blue; text-align:center;",
+        "Specially Formatted Table"
+      ),
+      tags$h4(
+        style="color:green; text-align:right;",
+        "Subtitle in Green"
+      )
+    ),
+    tags$caption(
+      style="caption-side:bottom;font-style:italic;font-size:80%;",
+      "This footer specifically designed
+      to communicate important information.
+      Since it is so important, it will of course
+      extend over many lines.  In fact, on narrow tables,
+      it might take >3.  On wide tables, it might only
+      require one.  Feel free to adjust the width,
+      and the importance and significance does not
+      go away."
+    )
+  )
+)
+
+# can make some helpers here
+#  or add arguments to html_table
+#  some examples of styling that we can apply to the table
+tbl <- tagAppendAttributes(
+  tbl,
+  style = "width:80%; margin:0px 50px 0px 50px;"
+)
+
 browsable(
   attachDependencies(
-    html_table(
-      as.htmldf(ft),
-      table_class="table-condensed",
-      include_rownames=TRUE,
-      colhead_style=paste0("vertical-align:bottom;",c("","","","font-style:italic;","font-style:italic;")),
-      align=c("left",rep("right",4)),
-      caption=tagList(
-        tags$caption(
-          style="caption-side:top;",
-          tags$h3("Specially Formatted Table")
-        ),
-        tags$caption(
-          style="caption-side:bottom;font-style:italic;font-size:80%;",
-          "this footer specifically designed to communicate important information"
-        )
-      )
+    tagList(
+      tags$head(
+        tags$style(HTML('tr:last-child{border-bottom:2px}'))
+      ),
+      tbl
     ),
     list(
       rmarkdown:::html_dependency_jquery(),
