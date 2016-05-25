@@ -33,7 +33,7 @@ html_table <- function(
   tag("table", list(
     class = table_class,
     if (is.null(caption) || is.na(caption)) NULL
-    else tag("caption", list(caption)),
+    else caption,
     tag("thead", list(
       tag("tr", c(class = "header",
                   .mapply(function(column, align, style) {
@@ -138,11 +138,13 @@ tbl <- html_table(
     tags$caption(
       style="caption-side:top;",
       tags$h2(
-        style="color:blue; text-align:center;",
+        class=".h2",
+        style="color:blue; text-align:center;line-height:0.75;",
         "Specially Formatted Table"
       ),
       tags$h4(
-        style="color:green; text-align:right;",
+        class=".h4",
+        style="color:green; text-align:right;line-height:0.75;",
         "Subtitle in Green"
       )
     ),
@@ -160,21 +162,32 @@ tbl <- html_table(
   )
 )
 
-# can make some helpers here
+#  can make some helpers here
 #  or add arguments to html_table
 #  some examples of styling that we can apply to the table
-tbl <- tagAppendAttributes(
-  tbl,
-  style = "width:80%; margin:0px 50px 0px 50px;"
-)
 
 browsable(
   attachDependencies(
     tagList(
-      tags$head(
-        tags$style(HTML('tr:last-child{border-bottom:2px}'))
-      ),
-      tbl
+      tbl,
+      tags$h1(class="bg-success","Additional Styling"),
+      tags$p("The table below is the table above
+             with additional styling applied.  We can
+             very easily change any of this.
+             We add a border to the top and bottom
+             of the table, reduce the line height
+             of the title and subtitle, and add table-hover
+             class so rows are highlighted on mouseover."),
+      tagAppendAttributes(
+        tbl,
+        # this demonstrates how we can play with margins around table
+        #  and width of table
+        style = "width:60%; margin:0px 50px 0px 50px;",
+
+        # this adds a border to the top and bottom of the table
+        style = "border-bottom: 2px solid; border-top: 2px solid;",
+        class = "table-hover"
+      )
     ),
     list(
       rmarkdown:::html_dependency_jquery(),
