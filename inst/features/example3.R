@@ -35,7 +35,7 @@ names(formatters) <- colnames(CSDperceptions)
 
 # this one normalizes color by column
 ft <- formattable(
-  CSDperceptions,
+  data.frame(CSDperceptions, check.names=FALSE),
   formatters
 )
 
@@ -54,7 +54,7 @@ names(formatters) <- colnames(CSDperceptions)
 
 # this one normalizes color by column
 ft2 <- formattable(
-  CSDperceptions,
+  data.frame(CSDperceptions,check.names=FALSE),
   formatters
 )
 
