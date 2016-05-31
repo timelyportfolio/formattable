@@ -106,7 +106,7 @@ ft <- formattable(
   coef.df,
   list(
     Estimate = estimateFormatter,
-    "Standard<br>Error" = x~digits(x,2),
+    "Standard<br>Error" = function(x) digits(x,2),
     "p" = pFormatter,
     "t" = tFormatter
   )
