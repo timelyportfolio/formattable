@@ -99,7 +99,7 @@ tFormatter <- formatter(
 
 # Example
 coef.matrix <- summary(lm(Sepal.Length ~ Species * Sepal.Width, iris))$coef
-coef.df <- as.data.frame(coef.matrix)
+coef.df <- as.data.frame(coef.matrix, check.names=FALSE)
 rownames(coef.df)[2] = "A label with some spaces"
 colnames(coef.df)[2:4] <- c("Standard<br>Error", "t", "p")
 ft <- formattable(
