@@ -458,24 +458,34 @@ format_table <- function(x, formatters = list(),
   format <- match.arg(format)
   cols <- colnames(x)
   mat <- vapply(x, base_format, character(nrow(x)), digits = digits)
-  rownames(mat) <- row.names
+  dim(mat) <- dim(x)
+  dimnames(mat) <- dimnames(x)
   for (fi in seq_along(formatters)) {
     fn <- names(formatters)[[fi]]
     f <- formatters[[fi]]
-    value <- if (!is.null(fn) && nzchar(fn) && fn %in% cols) {
-      farea <- list(row = TRUE, col = fn)
-      x[, fn]
+    if (!is.null(fn) && nzchar(fn)) {
+      if (fn %in% cols) {
+        value <- x[, fn]
+        fv <-  if (inherits(f, "formatter")) f(value, x)
+        else  if (inherits(f, "formula")) eval_formula(f, value, x)
+        else match.fun(f)(value)
+        mat[, fn] <- format(fv)
+      }
     } else if (inherits(f, "formula")) {
-      as.matrix(if (length(f) == 2L) x else {
+      value <- as.matrix(if (length(f) == 2L) {
+        row <- col <- TRUE
+        f <- eval(f[[2L]], environment(f))
+        x
+      } else {
         farea <- eval(f[[2L]], environment(f))
-        farea$row <- eval(farea$row, seq_list(rownames(x)), farea$envir)
-        farea$col <- eval(farea$col, seq_list(colnames(x)), farea$envir)
+        row <- eval(farea$row, seq_list(rownames(x)), farea$envir)
+        col <- eval(farea$col, seq_list(colnames(x)), farea$envir)
         f <- eval(f[[3L]], environment(f))
-        x[farea$row, farea$col]
+        x[row, col]
       })
+      fv <-  if (inherits(f, "formatter")) f(value, x) else match.fun(f)(value)
+      mat[row, col] <- format(fv)
     }
-    fv <-  if (inherits(f, "formatter")) f(value, x) else match.fun(f)(value)
-    mat[farea$row, farea$col] <- if (is.formattable(fv)) format.formattable(fv) else fv
   }
   kable(mat, format = format, align = align, escape = FALSE, ...)
 }
