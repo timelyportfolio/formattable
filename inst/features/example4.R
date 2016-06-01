@@ -106,7 +106,7 @@ ft <- formattable(
   coef.df,
   list(
     Estimate = estimateFormatter,
-    "Standard<br>Error" = function(x) digits(x,2),
+    "Standard<br>Error" = x~digits(x,2),
     "p" = pFormatter,
     "t" = tFormatter
   )
@@ -190,8 +190,8 @@ browsable(
       )
     ),
     list(
-      rmarkdown:::html_dependency_jquery(),
-      bootstrap_dependency()
+      rmarkdown::html_dependency_jquery(),
+      rmarkdown::html_dependency_bootstrap("default")
     )
   )
 )
