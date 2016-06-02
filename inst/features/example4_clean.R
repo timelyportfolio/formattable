@@ -1,4 +1,4 @@
-devtools::install_github("renkun-ken/formattable@v0.2")
+#devtools::install_github("renkun-ken/formattable@v0.2")
 
 library(formattable)
 library(htmltools)
@@ -51,7 +51,11 @@ tbl <- format_table(
     "<span style='font-style:italic;'>t</span>",
     "<span style='font-style:italic;'>p</span>"
   ),
-  table.attr = 'class="table table-condensed"',
+  table.attr = paste0(
+    'class = "table table-condensed"',
+    'style = "margin:0px 50px 0px 50px; border-bottom: 2px solid; border-top: 2px solid;"',
+    sep = " "
+  ),
   align = c("l",rep("r",4)),
   caption = tagList(
     tags$h2(
@@ -93,3 +97,12 @@ browsable(
     )
   )
 )
+
+
+# this is a really ugly way to return a htmlwidget
+#  I will have to spend some time thinking through this.
+# start by setting up a dummy formattable
+ftw <- as.htmlwidget(formattable(data.frame()), width="80%")
+# and replace the html with our formatted html from above
+ftw$x$html <- HTML(tbl)
+ftw
