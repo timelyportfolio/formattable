@@ -1,5 +1,4 @@
-base_ifelse <- base::ifelse
-base_format <- base::format
+base_ifelse <- getExportedValue("base", "ifelse")
 
 as_numeric <- function(x) if (is.numeric(x)) x else as.numeric(x)
 
@@ -76,8 +75,18 @@ get_digits <- function(x) {
     nchar(gsub("^.*\\.([0-9]*).*$", "\\1", x)), 0L)
 }
 
-seq_list <- function(x) {
+seq_list <- function(x = character()) {
   lst <- as.list(seq_along(x))
   names(lst) <- x
   lst
+}
+
+copy_dim <- function(src, target, use.names = TRUE) {
+  if (is.array(src)) {
+    dim(target) <- dim(src)
+    if (use.names) dimnames(target) <- dimnames(src)
+  } else {
+    if (use.names) names(target) <- names(src)
+  }
+  target
 }
