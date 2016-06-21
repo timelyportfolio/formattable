@@ -35,3 +35,66 @@ ft_html2 <- paste0(
 ft<- as.htmlwidget(formattable(data.frame()))
 ft$x$html <- ft_html2
 ft
+
+
+# found this https://www.cs.tut.fi/~jkorpela/HTML/emptycells.html
+#  &nbsp tricky due to html escape
+ft_html3 <- paste0(
+  gsub(
+    x = strsplit(ft_html, "\n")[[1]],
+    pattern = "<td.*(cell-na-empty).*</td>",
+    replacement ="<td>&nbsp</td>"
+  ),
+  collapse = "\n"
+)
+ft<- as.htmlwidget(formattable(data.frame()))
+ft$x$html <- HTML(ft_html3)
+ft
+
+
+# try css empty cells trick
+ft_html4 <- paste0(
+  gsub(
+    x = strsplit(ft_html, "\n")[[1]],
+    pattern = "<td.*(cell-na-empty).*</td>",
+    replacement = ""
+  ),
+  collapse = "\n"
+)
+
+ft<- as.htmlwidget(formattable(data.frame()))
+ft$x$html <- paste0(
+  tags$style("table { empty-cells: hide; }"),
+  ft_html4,
+  collapse="\n"
+)
+ft
+
+
+
+
+
+### so it appears the empty-cells: hide
+###  is the best solution
+###  work through it with longley
+
+
+(Cl <- data.frame(cor(longley),2))
+Cl[upper.tri(Cl)] <- NA
+
+cl_tbl <- format_table(
+  table.attr = "style = 'empty-cells:hide;'",
+  Cl,
+  digits=2
+)
+
+browsable(HTML(cl_tbl))
+
+ft <- as.htmlwidget(formattable(data.frame()))
+ft$x$html <- paste0(gsub(
+  x=strsplit(cl_tbl,"\n")[[1]],
+  pattern="(.*<td.*> NA </td>)",
+  replacement="",
+  perl=TRUE
+),collapse="\n")
+ft
