@@ -43,7 +43,7 @@ style <- function(...) {
     attrs <- .mapply(function(name, value) {
       paste0(name, ifelse(nzchar(name), ": ", ""), paste0(value, collapse = " "))
     }, list(name = argnames, value = args), NULL)
-    paste0(attrs, collapse = "; ")
+    paste0(attrs, collapse = "; ", sep="; ")
   }, dots, NULL))
 }
 

@@ -140,7 +140,7 @@ color_tile <- function(...) {
 #' formattable(mtcars, list(mpg = color_bar("lightgray", proportion)))
 #' @seealso
 #' \link{normalize_bar}, \link{proportion_bar}
-color_bar <- function(color = "lightgray", fun = "proportion", ...) {
+color_bar <- function(color = "lightgray", fun = "proportion", style_more = "", ...) {
   fun <- match.fun(fun)
   formatter("span",
     style = function(x) style(
@@ -150,7 +150,9 @@ color_bar <- function(color = "lightgray", fun = "proportion", ...) {
       "padding-right" = "2px",
       "background-color" = csscolor(color),
       width = percent(fun(as.numeric(x), ...))
-    ))
+    ),
+    style = style_more
+  )
 }
 
 #' Create a color-bar formatter using normalize
