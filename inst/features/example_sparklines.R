@@ -98,7 +98,12 @@ iris %>%
   tagList() %>%
   attachDependencies(
     c(
-      list(rmarkdown:::html_dependency_bootstrap("default")),
+      list(htmlDependency(
+        name = "hack.css",
+        version = "0.5.0",
+        src = c(href="https://npmcdn.com/hack/dist"),
+        stylesheet = c("hack.css", "standard.css")
+      )),
       htmlwidgets:::widget_dependencies("sparkline","sparkline")
     )
   ) %>%
@@ -152,3 +157,34 @@ iris %>%
     htmlwidgets:::widget_dependencies("sparkline","sparkline")
   ) %>%
   browsable
+
+
+ft_df <- formattable(
+  iris,
+  list(area(col=1:4) ~ color_tile("white","pink"))
+) %>%
+  formattable:::render_html_matrix.formattable()
+
+colnames(ft_df)[1:4] <- mapply(
+  function(column,name){
+    paste0(
+      name,
+      as.character(
+        as.tags(
+          sparkline(column, type="bar", chartRangeMin = 0, chartRangeMax = max(iris[,1:4]))
+        )
+      ),
+      collapse="<br/>"
+    )
+  },
+  iris[,1:4],
+  colnames(iris)[1:4]
+)
+
+knitr::kable(ft_df, format="html", escape=FALSE) %>%
+  HTML() %>%
+  tagList() %>%
+  attachDependencies(
+    htmlwidgets:::widget_dependencies("sparkline","sparkline")
+  ) %>%
+  browsable()
