@@ -48,3 +48,107 @@ browsable(
     htmlwidgets:::widget_dependencies("sparkline","sparkline")
   )
 )
+
+
+iris %>%
+  group_by(Species) %>%
+  summarize_all(function(x){paste0(x,collapse=",")}) %>%
+  format_table(
+    list(
+      area(col=2:5) ~ formatter(
+        "span",
+        class = "sparkline-box",
+        x ~ x
+      )
+    )
+  ) %>%
+  HTML %>%
+  tagList(
+    tags$script(sprintf(
+"
+  $('.sparkline-box').sparkline(
+    'html',
+    {type:'box',raw:false, chartRangeMin: 0, chartRangeMax: %f, width:150
+  })
+"
+    ,max(iris[,1:4])
+    ))
+  ) %>%
+  attachDependencies(
+    htmlwidgets:::widget_dependencies("sparkline","sparkline")[-1]
+  ) %>%
+  browsable
+
+
+iris %>%
+  group_by(Species) %>%
+  summarize_all(list) %>%
+  format_table(
+    list(
+      area(col=2:5) ~ function(x){
+        lapply(x,function(xx){
+          as.character(as.tags(
+            sparkline(xx,type="box",chartRangeMin=0,chartRangeMax=max(unlist((x))))
+          ))
+        })
+      }
+    )
+  ) %>%
+  HTML %>%
+  tagList() %>%
+  attachDependencies(
+    c(
+      list(rmarkdown:::html_dependency_bootstrap("default")),
+      htmlwidgets:::widget_dependencies("sparkline","sparkline")
+    )
+  ) %>%
+  browsable
+
+
+
+iris %>%
+  group_by(Species) %>%
+  summarize_all(list) %>%
+  formattable(
+    formatters = list(
+      area(col=2:5) ~ function(x){
+        lapply(x,function(xx){
+          as.character(as.tags(
+            sparkline(xx,type="box",chartRangeMin=0,chartRangeMax=max(unlist((x))))
+          ))
+        })
+      }
+    ),
+    table.attr="class='table table-condensed table-striped'"
+  ) %>%
+  formattable:::as.htmlwidget() %>%
+  htmlwidgets:::as.tags.htmlwidget() %>%
+  tagList() %>%
+  attachDependencies(
+    htmlwidgets:::widget_dependencies("sparkline","sparkline")
+  ) %>%
+  browsable
+
+
+iris %>%
+  group_by(Species) %>%
+  summarize_all(list) %>%
+  formattable(
+    formatters = list(
+      area(col=2:5) ~ function(x){
+        lapply(x,function(xx){
+          as.character(as.tags(
+            sparkline(xx,type="bar",chartRangeMin=0,chartRangeMax=max(unlist((x))))
+          ))
+        })
+      }
+    ),
+    table.attr="class='table table-condensed table-striped'"
+  ) %>%
+  formattable:::as.htmlwidget() %>%
+  htmlwidgets:::as.tags.htmlwidget() %>%
+  tagList() %>%
+  attachDependencies(
+    htmlwidgets:::widget_dependencies("sparkline","sparkline")
+  ) %>%
+  browsable
